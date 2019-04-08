@@ -43,7 +43,7 @@
             </el-table-column>
             <el-table-column
               align="right">
-              <template slot="header" slot-scope="scope">
+              <template slot="header">
                 <el-button
                   size="mini"
                   @click="handCreate">New</el-button>
@@ -59,6 +59,13 @@
               </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :page-size="pageSize"
+          @current-change="pageChange"
+          :total="total">
+        </el-pagination>
     </el-main>
 </template>
 
@@ -68,6 +75,7 @@
 
 <script>
   import cognitionService from '../../service/cognitionService.js'
+  var clone = require('clone')
 
   export default {
     data() {
@@ -77,6 +85,7 @@
         addForm: {},
         pageNo: 1,
         pageSize: 20,
+        total: 0,
         dialogTitle: '',
         op: 1, // 1 添加； 2 修改； 3 查看
       }
@@ -89,20 +98,22 @@
       this.pageInit()
     },
     methods: {
-      pageInit: function() {
-        var _this = this
+      pageInit: async function() {
+        // loading 框
         const loading = this.$loading({
-          lock: true,
-          // text: 'Loading',
-          // spinner: 'el-icon-loading',
-          // background: 'rgba(0, 0, 0, 0.7)'
+          lock: true
         })
-        setTimeout( async () => {
-          loading.close();
-          var res = await cognitionService.list(this.pageNo, this.pageSize)
-          _this.tableData = res.data.hits.hits
-        }, 980)
+        console.debug(this.pageSize)
+        var res = await cognitionService.list(this.pageNo, this.pageSize)
+        loading.close()
+        this.tableData = res.data.hits.hits
+        this.total = res.data.hits.total
+
         
+      },
+      pageChange: function(pageNo) {
+        this.pageNo = pageNo
+        this.pageInit()
       },
       handleSelectionChange: function(res) {
           console.debug('seleChange: ', res)
@@ -126,7 +137,7 @@
         this.dialogAddFormVisible = true
       },
       handleEdit: function(idx, row) {
-        this.addForm = row._source
+        this.addForm = clone(row._source)
         this.addForm.id = row._id
         this.op = 2
         this.dialogTitle = this.getDialogTitle()
@@ -140,11 +151,12 @@
             message: 'success',
             type: 'success'
           });
-          this.pageInit()
-          // var _this = this
-          // window.setTimeout(function() {
-          //   _this.pageInit()
-          // }, 1000)
+          // 删除
+          this.tableData.forEach( (T, idx) => {
+            if(T._id == row._id) {
+              this.tableData.splice(idx, 1)
+            }
+          })
         }
       },
       submitAddForm: async function() {
@@ -156,7 +168,23 @@
             message: 'success',
             type: 'success'
           });
-          this.pageInit()
+          if( this.op == 2 ) {
+            // 修改
+            this.tableData.forEach(T => {
+              if(res.data._id == T._id) {
+                T._source = clone(this.addForm)
+              }
+            })
+            
+          } else if( this.op == 1 ) {
+            // 添加
+            console.debug(this.addForm)
+            this.tableData.unshift({
+              _id: res.data._id,
+              _source: clone(this.addForm)
+            })
+          }
+          
         }
       }
     }
