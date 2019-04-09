@@ -31,9 +31,31 @@ export const del = async (id) => {
 // 分页查询
 export const list = async (pageNo, pageSize) => {
     const res = await http.post(cognitionApi + '/_search', {
-        size: pageSize,
-        from: (pageNo - 1) * pageSize,
-        sort: {date: {order: "desc" }}
+        "size": pageSize,
+        "from": (pageNo - 1) * pageSize,
+        "sort": {date: {order: "desc" }}
+    })
+    return res
+}
+
+// 业务搜索🔍
+export const search = async (keyword, pageNo, pageSize) => {
+    const res = await http.post(cognitionApi + '/_search', {
+        "size": pageSize,
+        "from": (pageNo - 1) * pageSize,
+        "query": {
+            "multi_match": {
+                "query": keyword,
+                "type": "most_fields",
+                "fields": [ "title^2", "body" ] // 匹配字段，标题匹配得分优先级更高
+            }
+        },
+        "highlight": {
+            "fields" : {
+                "title" : {},
+                "body": {}
+            }
+        }
     })
     console.debug("res", res)
     return res
@@ -42,7 +64,8 @@ export const list = async (pageNo, pageSize) => {
 export const cognitionService = {
     upsert,
     del,
-    list
+    list,
+    search
 }
 
 export default cognitionService

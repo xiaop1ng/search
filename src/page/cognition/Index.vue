@@ -1,7 +1,7 @@
 <template>
     <el-main style="min-height: 600px;">
         <!-- 添加、修改、查看 -->
-        <el-dialog :title="dialogTitle" :visible.sync="dialogAddFormVisible">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" width="80%" >
           <el-form :model="addForm">
             <el-form-item label="标题">
               <el-input v-model="addForm.title" autocomplete="off"></el-input>
@@ -21,7 +21,8 @@
             :data="tableData"
             tooltip-effect="dark"
             style="width: 100%"
-            @selection-change="handleSelectionChange">
+            @selection-change="handleSelectionChange"
+            @row-dblclick="handleDbClick">
             <el-table-column
             type="selection"
             width="55">
@@ -135,6 +136,9 @@
         this.op = 1
         this.dialogTitle = this.getDialogTitle()
         this.dialogAddFormVisible = true
+      },
+      handleDbClick: function(row, column) {
+        this.handleEdit(null, row)
       },
       handleEdit: function(idx, row) {
         this.addForm = clone(row._source)
