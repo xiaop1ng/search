@@ -24,7 +24,7 @@
     -->
     <el-card class="box-card" shadow="hover" v-for="item in resultData" :key="item._id">
       <div slot="header" class="clearfix">
-        <el-button type="text">{{ item._source.title }}</el-button>
+        <el-button type="text" @click="lookDocument(item._id)">{{ item._source.title }}</el-button>
       </div>
       <div v-if="item.highlight && item.highlight.body" class="text item" v-html="item.highlight.body.join()">
       </div>
@@ -102,6 +102,15 @@
 
     },
     methods: {
+      lookDocument: function(id) {
+        console.debug(id)
+        this.$router.push({
+          name: 'document',
+          params: {
+            id:id
+          }
+        })
+      },
       getData: async function() {
         // 开始搜索
         const loading = this.$loading({

@@ -15,7 +15,12 @@
             <el-button type="primary" @click="submitAddForm">确 定</el-button>
           </div>
         </el-dialog>
-
+        <div align="right" style="padding-right: 12px">
+          <el-button
+          size="mini" 
+          @click="handCreate">New</el-button>
+        </div>
+        
         <el-table
             ref="multipleTable"
             :data="tableData"
@@ -44,11 +49,6 @@
             </el-table-column>
             <el-table-column
               align="right">
-              <template slot="header">
-                <el-button
-                  size="mini"
-                  @click="handCreate">New</el-button>
-              </template>
               <template slot-scope="scope">
                 <el-button
                   size="mini"

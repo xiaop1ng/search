@@ -61,11 +61,17 @@ export const search = async (keyword, pageNo, pageSize) => {
     return res
 }
 
+export const get = async (id) => {
+    const res = await http.get(cognitionApi + '/' + id)
+    return res
+}
+
 export const cognitionService = {
     upsert,
     del,
     list,
-    search
+    search,
+    get
 }
 
 export default cognitionService
