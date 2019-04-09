@@ -1,7 +1,7 @@
 <template>
   <div class="search-box">
     <!-- 搜索框 -->
-    <el-input v-model="keyword" class="input-with-select" :clearable="true" :autofocus="true">
+    <el-input v-model="keyword" class="input-with-select" @keyup.enter.native="search" :clearable="true" :autofocus="true">
       <el-select v-model="select" slot="prepend" >
         <el-option label="求索" value="0"></el-option>
         <el-option label="Google" value="1"></el-option>

@@ -1,14 +1,18 @@
 <template>
   <div class="result-box">
-    <!-- 搜索框 -->
-    <el-input v-model="keyword" class="input-with-select" :clearable="true" :autofocus="true">
+    <!-- 
+      搜索框 
+      el-input监听不了回车事件，原因应该是element-ui自身封装了一层input标签之后，把原来的事件隐藏了 
+      解决方法需要在事件后面加上.native
+    -->
+    <el-input v-model="keyword" class="input-with-select"  @keyup.enter.native="search" :clearable="true" :autofocus="true">
       <el-select v-model="select" slot="prepend" >
         <el-option label="求索" value="0"></el-option>
         <el-option label="Google" value="1"></el-option>
         <el-option label="Baidu" value="2"></el-option>
         <el-option label="Bing" value="3"></el-option>
       </el-select>
-      <el-button slot="append" icon="el-icon-search" @keyup="keyupHandler" @click="search"></el-button>
+      <el-button slot="append" icon="el-icon-search"  @click="search"></el-button>
     </el-input>
 
     <!-- 搜索联想 -->
@@ -109,13 +113,8 @@
         this.resultData = this.resultData.concat(res.data.hits.hits)
         this.total = res.data.hits.total
       },
-      keyupHandler: function(event) {
-          if (event.keyCode == "13") {
-            //回车执行查询
-            this.search()
-          }
-      },
       search: function() {
+         console.debug(this.keyword )
         if(this.keyword.trim().length == 0) {
           return;
         }
