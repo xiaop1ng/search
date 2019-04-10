@@ -32,10 +32,16 @@
         {{item._source.body}}
       </div>
     </el-card>
+
+    <el-button class="loading-btn" @click="loadingMore" round :loading="loadingMoreFlag" :disabled="loadingDisable">{{loadingText}}</el-button>
   </div>
 </template>
 
 <style>
+  .loading-btn {
+    width: 100%;
+    margin-top: 5px;
+  }
   .result-box {
     margin-top: 20px;
     padding-left: 200px;
@@ -88,7 +94,10 @@
         pageSize: 50,
         pageNo: 1,
         total: 0,
-        resultData: []
+        resultData: [],
+        loadingMoreFlag: false,
+        loadingText: '加载更多',
+        loadingDisable: false
       }
     },
     mounted: function() {
@@ -102,6 +111,12 @@
 
     },
     methods: {
+      loadingMore: function() {
+        this.pageNo++
+        this.loadingMoreFlag = true
+        this.getData()
+
+      },
       lookDocument: function(id) {
         console.debug(id)
         this.$router.push({
@@ -116,14 +131,28 @@
         const loading = this.$loading({
           lock: true
         })
-        console.debug(this.pageSize)
         var res = await cognitionService.search(this.keyword, this.pageNo, this.pageSize)
         loading.close()
         this.resultData = this.resultData.concat(res.data.hits.hits)
         this.total = res.data.hits.total
+        if(this.total == 0) {
+          // 没有搜索到数据
+          this.loadingText = '没有数据 :('
+          this.loadingDisable = true
+
+        } else if (this.total > this.resultData.length) {
+          // 还有数据
+          this.loadingText = '加载更多'
+          this.loadingDisable = false
+        } else {
+          // 已经到底了
+          this.loadingText = '没有更多啦~'
+          this.loadingDisable = true
+        }
+        this.loadingMoreFlag = false
       },
       search: function() {
-         console.debug(this.keyword )
+
         if(this.keyword.trim().length == 0) {
           return;
         }
@@ -137,7 +166,8 @@
               }
             }); //向url中传递参数
             // 重置搜索结果
-            this.resultData = []; 
+            this.resultData = []
+            this.pageNo = 1
             this.getData()
             break;
           case '1': // Google
