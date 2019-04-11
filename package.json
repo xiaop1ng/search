@@ -12,7 +12,8 @@
     "vue": "2.6.10",
     "clone": "2.1.2",
     "vue-router": "3.0.2",
-    "marked": "0.6.2"
+    "marked": "0.6.2",
+    "uuid": "3.3.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",

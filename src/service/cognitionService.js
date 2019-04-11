@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const baseURL = 'http://localhost:9200'
 const cognitionApi = '/doc/cognition'
+const uuid = require('uuid/v1');
 
 const http = axios.create({
     baseURL: baseURL,
@@ -25,6 +26,26 @@ export const upsert = async (obj) => {
 // 根据 id 删除文档
 export const del = async (id) => {
     const res = await http.delete(cognitionApi + '/' + id)
+    return res
+}
+
+// 批量删除
+export const delBatch = async (ids) => {
+    var body = ''
+    ids.forEach(T => {
+        body += '{"delete":{"_index":"doc","_type":"cognition","_id":"' + T._id + '"}}\n'
+    })
+    const res = await http.post('/_bulk', body)
+    return res
+}
+
+// 批量导入
+export const addBatch = async (objArr) => {
+    var body = ''
+    objArr.forEach(T => {
+        body += '{"create":{"_index":"doc","_type":"cognition","_id":"' + uuid() + '"}}\n' + JSON.stringify(T) + '\n'
+    })
+    const res = await http.post('/_bulk', body)
     return res
 }
 
@@ -69,6 +90,8 @@ export const get = async (id) => {
 export const cognitionService = {
     upsert,
     del,
+    delBatch,
+    addBatch,
     list,
     search,
     get

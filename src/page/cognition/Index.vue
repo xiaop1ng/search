@@ -15,10 +15,43 @@
             <el-button type="primary" @click="submitAddForm">确 定</el-button>
           </div>
         </el-dialog>
+
+        <!-- 导入 -->
+        <el-dialog title="导入" :visible.sync="dialogImportFormVisible">
+          <el-upload
+            class="upload-demo"
+            drag
+            ref="upload"
+            action="/"
+            :auto-upload="false"
+            accept=".md"
+            :on-change="readFiles"
+            multiple>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__tip" slot="tip">请上传 md 文件</div>
+          </el-upload>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogImportFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="submitImportForm">确 定</el-button>
+          </div>
+        </el-dialog>
+
         <div align="right" style="padding-right: 12px">
+          
+          <el-button
+          size="mini" 
+          @click="pageInit">Refresh</el-button>
+          <el-button
+          size="mini" 
+          @click="handImport">Import</el-button>
           <el-button
           size="mini" 
           @click="handCreate">New</el-button>
+          <el-button
+          size="mini"
+          type="danger"
+          @click="handCreateBatch">DeleteBatch</el-button>
         </div>
         
         <el-table
@@ -50,6 +83,9 @@
             <el-table-column
               align="right">
               <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  @click="handlePreview(scope.$index, scope.row)">Preview</el-button>
                 <el-button
                   size="mini"
                   @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
@@ -89,6 +125,9 @@
         total: 0,
         dialogTitle: '',
         op: 1, // 1 添加； 2 修改； 3 查看
+        batchOpArr: [], // 批量操作数组,
+        dialogImportFormVisible: false,
+        importFiles: []
       }
     },
     computed: {
@@ -117,7 +156,7 @@
         this.pageInit()
       },
       handleSelectionChange: function(res) {
-          console.debug('seleChange: ', res)
+          this.batchOpArr = res
       },
       getDialogTitle: function() {
         if(this.op == 1) {
@@ -129,6 +168,83 @@
         } else {
           return '文档'
         }
+      },
+      handCreateBatch: function() { // 批量删除
+        var size = this.batchOpArr.length
+        if(size == 0) {
+          return
+        }
+        this.$confirm('此操作将永久删除选中文档，共计 ' + size + ' 条，是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then( async () => {
+          var res = await cognitionService.delBatch(this.batchOpArr)
+          this.batchOpArr.forEach( T => {
+            this.tableData.forEach( (K,idx) => {
+              if(K._id == T._id) {
+                this.tableData.splice(idx, 1)
+              }
+            })
+          })
+          this.batchOpArr = []
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      },
+      handImport: function() {
+        // 导入
+        this.dialogImportFormVisible = true
+      },
+      readFiles: function(file, fileList) {
+        this.importFiles = fileList
+      },
+      submitImportForm: function() {
+        var importSize = this.importFiles.length;
+        if( importSize == 0) {
+          return
+        }
+        // 导入文档到 es
+        // loading 框
+        const loading = this.$loading({
+          lock: true
+        })
+        var importDocs = [];
+        this.importFiles.forEach( T => {
+          console.log(T.name)
+          var reader = new FileReader();
+          reader.onload = async() => {
+            importDocs.push({
+              title: T.name,
+              body:  reader.result,
+              date: new Date().getTime()
+            })
+
+            if(importDocs.length == importSize) {
+              // 读文件操作完成
+              var res = await cognitionService.addBatch(importDocs)
+              loading.close()
+              this.dialogImportFormVisible = false
+              this.$message({
+                type: 'success',
+                message: '导入完成，请刷新列表!'
+              });
+              this.$refs.upload.clearFiles()
+            }
+          };
+          reader.readAsText(T.raw);
+        })
+
+        // loading...
+
+        // 判断 importDocs.length == importFiles.length 批量添加到 es
       },
       handCreate: function() {
         // 弹窗
@@ -147,21 +263,37 @@
         this.dialogTitle = this.getDialogTitle()
         this.dialogAddFormVisible = true
       },
-      handleDelete: async function(idx, row) {
-        var res = await cognitionService.del(row._id)
-        if(res && res.data.result == "deleted") {
-          
+      handlePreview: function (idx, row) {
+        window.open('/document/' + row._id, '_blank')
+      },
+      handleDelete:  function(idx, row) {
+        this.$confirm('此操作将永久删除该文档，是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then( async () => {
+          var res = await cognitionService.del(row._id)
+          if(res && res.data.result == "deleted") {
+            
+            this.$message({
+              message: 'success',
+              type: 'success'
+            });
+            // 删除
+            this.tableData.forEach( (T, idx) => {
+              if(T._id == row._id) {
+                this.tableData.splice(idx, 1)
+              }
+            })
+          }
+        }).catch(() => {
           this.$message({
-            message: 'success',
-            type: 'success'
-          });
-          // 删除
-          this.tableData.forEach( (T, idx) => {
-            if(T._id == row._id) {
-              this.tableData.splice(idx, 1)
-            }
-          })
-        }
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+
+        
       },
       submitAddForm: async function() {
         this.dialogAddFormVisible = false
