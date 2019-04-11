@@ -35,11 +35,15 @@ The way ahead is long; I see no ending, yet high and low I will search with my w
 首先需要安装 Elasticsearch & Node
 
 修改 es 配置地址 `/src/service/cognitionService.js`  baseURL 
+
 es 接口跨域问题：
+
 配置 config\elasticsearch.yml
 
+```
 http.cors.enabled: true
 http.cors.allow-origin: "*"
+```
 
 > npm install
-npm run serve
+> npm run serve
