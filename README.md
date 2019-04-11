@@ -17,7 +17,6 @@ The way ahead is long; I see no ending, yet high and low I will search with my w
 
 后端
 - Elasticsearch
-- SpringBoot
 
 前端组件选择
 - Vue
