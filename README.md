@@ -29,3 +29,17 @@ The way ahead is long; I see no ending, yet high and low I will search with my w
 - 热点数据（加入到缓存数据中，瞅瞅热点数据是否真的符合正太分布的规律）
 - 认知分词分析（自动分类，AutoTag）：想做但是目前不知道怎么做的事
 - 数据分析
+
+# 安装
+
+首先需要安装 Elasticsearch & Node
+
+修改 es 配置地址 `/src/service/cognitionService.js`  baseURL 
+es 接口跨域问题：
+配置 config\elasticsearch.yml
+
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+
+> npm install
+npm run serve
