@@ -7,7 +7,7 @@ const uuid = require('uuid/v1');
 const http = axios.create({
     baseURL: baseURL,
     timeout: 20000,
-    headers : {
+    headers: {
         'Content-Type': 'application/json'
     }
 });

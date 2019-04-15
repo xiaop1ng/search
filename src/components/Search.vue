@@ -1,5 +1,7 @@
 <template>
   <div class="search-box">
+    
+    <img src="/logo_l.png"/>
     <!-- 搜索框 -->
     <el-input v-model="keyword" class="input-with-select" @keyup.enter.native="search" :clearable="true" :autofocus="true">
       <el-select v-model="select" slot="prepend" >
@@ -20,9 +22,10 @@
 
 <style>
   .search-box {
-    margin-top: 80px;
+    margin-top: 0px;
     padding-left: 200px;
     padding-right: 200px;
+    text-align: center;
   }
   .el-select .el-input {
     width: 100px;
