@@ -1,6 +1,29 @@
+/**
+ *                             _ooOoo_
+ *                            o8888888o
+ *                            88" . "88
+ *                            (| -_- |)
+ *                            O\  =  /O
+ *                         ____/`---'\____
+ *                       .'  \\|     |//  `.
+ *                      /  \\|||  :  |||//  \
+ *                     /  _||||| -:- |||||-  \
+ *                     |   | \\\  -  /// |   |
+ *                     | \_|  ''\---/''  |   |
+ *                     \  .-\__  `-`  ___/-. /
+ *                   ___`. .'  /--.--\  `. . __
+ *                ."" '<  `.___\_<|>_/___.'  >'"".
+ *               | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+ *               \  \ `-.   \_ __\ /__ _/   .-` /  /
+ *          ======`-.____`-.___\_____/___.-`____.-'======
+ *                             `=---='
+ *          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *                     佛祖保佑        永无BUG
+ */
+
 import axios from 'axios'
 
-const baseURL = 'http://localhost:9200'
+const baseURL = 'http://localhost:9200' // es 接口地址
 const cognitionApi = '/doc/cognition'
 const uuid = require('uuid/v1');
 
@@ -17,7 +40,7 @@ export const upsert = async (obj) => {
     var opStr = ''
     if(obj.id) {
         opStr = '/' + obj.id
-        delete obj.id
+        delete obj.id // 更新的时候删除 id 键
     }
     const res = await http.post(cognitionApi + opStr, obj)
     return res
