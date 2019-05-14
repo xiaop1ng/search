@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>打字动效</title>
+    <style>
+    .typing {
+        width: 15em;
+        white-space: nowrap;
+        border-right: 2px solid transparent;
+        animation: typing 3.5s steps(15, end), blink-caret .75s step-end infinite;
+        overflow: hidden;
+    }
+    /* 打印效果 */
+    @keyframes typing {
+        from { width: 0; }
+        to { width: 15em; }
+    }
+    /* 光标闪啊闪 */
+    @keyframes blink-caret {
+        from, to { box-shadow: 1px 0 0 0 transparent; }
+        50% { box-shadow: 1px 0 0 0; }
+    }
+    </style>
+</head>
+<body>
+    <p class="typing">无法访问此网站 连接已重置。</p>
+</body>
+</html>
