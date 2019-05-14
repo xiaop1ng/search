@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>换皮肤哦~</title>
+    <link href="/css/default.css" value="default" rel="stylesheet" type="text/css" title="默认">
+    <link href="/css/red.css" value="red" rel="alternate stylesheet" type="text/css" title="红色">
+    <link href="/css/green.css" value="green" rel="alternate stylesheet" type="text/css" title="绿色">
+</head>
+<body>
+    <div>
+        test
+    </div>
+    <button onclick="changeSkin('default')" >默认</button>
+    <button onclick="changeSkin('red')" >红</button>
+    <button onclick="changeSkin('green')" >绿</button>
+    <script>
+        // 换肤
+        function changeSkin(val) {
+            var value = val;
+            var eleLinks = document.querySelectorAll('link[title]');
+            eleLinks.forEach(T => {
+                T.disabled = true;
+                if (T.getAttribute('value') == value) {
+                    console.log(value)
+                    // 该样式CSS文件生效
+                    T.disabled = false;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>font-size 自适应</title>
+    <style>
+    .box span {
+        font-size: 40px;    
+    }
+    .box span:first-child:nth-last-child(n+13),
+    .box span:first-child:nth-last-child(n+13) ~ span {
+        font-size: 30px;    
+    }
+    .box span:first-child:nth-last-child(n+17),
+    .box span:first-child:nth-last-child(n+17) ~ span {
+        font-size: 20px;    
+    }
+    .box span:first-child:nth-last-child(n+25),
+    .box span:first-child:nth-last-child(n+25) ~ span {
+        font-size: 14px;    
+    }
+    </style>
+</head>
+<body>
+    <textarea id="textarea" rows="5" placeholder="输入文字，看下面实时效果"></textarea>
+    <p id="box" class="box"></p>
+    <script>
+        textarea.addEventListener('input', function () {
+            box.innerHTML = this.value.split('').map(function (char) {
+                return '<span>' + char + '</span>';
+            }).join('');
+        });
+    </script>
+</body>
+</html>
