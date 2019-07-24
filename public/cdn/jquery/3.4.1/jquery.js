@@ -83,8 +83,11 @@
     return typeof obj === "function" && typeof obj.nodeType !== "number";
   };
 
-
+  /**
+   * 判断对象是否是 window 对象
+   */
   var isWindow = function isWindow(obj) {
+    // window.window -> window 属性等价于 self 属性，指向自身的引用
     return obj != null && obj === obj.window;
   };
 
@@ -128,6 +131,7 @@
   }
 
 
+  // 获取对象类型
   function toType(obj) {
     if (obj == null) {
       return obj + "";
@@ -147,11 +151,12 @@
   var
     version = "3.4.1",
 
-    // Define a local copy of jQuery
+    // 定义 jQuery 函数，传入选择器和上下文
     jQuery = function (selector, context) {
 
       // The jQuery object is actually just the init constructor 'enhanced'
-      // Need init if jQuery is called (just allow error to be thrown if not included)
+	  // Need init if jQuery is called (just allow error to be thrown if not included)
+	  // 这里的 fn 函数指向原型对象 prototype
       return new jQuery.fn.init(selector, context);
     },
 
@@ -170,9 +175,12 @@
     length: 0,
 
     toArray: function () {
-      return slice.call(this);
+	  // Array.prototype.slice() 方法返回一个新的数组对象，这一对象是一个原数组的浅拷贝。原始数组不会被改变。
+	  // Function.prototype.call() 方法原型上的一个函数，slice.call(this) 效果等价于 this.slice() 
+	  return slice.call(this);
     },
 
+    // 返回目标索引的元素，若不传 num 则返回元素集合的副本
     // Get the Nth element in the matched element set OR
     // Get the whole matched element set as a clean array
     get: function (num) {
@@ -186,6 +194,7 @@
       return num < 0 ? this[num + this.length] : this[num];
     },
 
+    // 丢入一个元素数组到栈顶
     // Take an array of elements and push it onto the stack
     // (returning the new matched element set)
     pushStack: function (elems) {
@@ -200,35 +209,43 @@
       return ret;
     },
 
+    // 对元素集进行遍历操作
     // Execute a callback for every element in the matched set.
     each: function (callback) {
       return jQuery.each(this, callback);
     },
 
+    // 对元素集进行遍历操作，并返回 callback 的返回值数组
     map: function (callback) {
       return this.pushStack(jQuery.map(this, function (elem, i) {
         return callback.call(elem, i, elem);
       }));
     },
 
+    // arguments 参数数组，返回一个新的元素数组
     slice: function () {
+      // call()方法的作用和 apply() 方法类似，区别就是call()方法接受的是参数列表，而apply()方法接受的是一个参数数组。
       return this.pushStack(slice.apply(this, arguments));
     },
 
+    // 返回第一个元素
     first: function () {
       return this.eq(0);
     },
 
+    // 返回最后一个元素
     last: function () {
       return this.eq(-1);
     },
 
+    // 返回索引为 i 的元素，i < 0 时，从数组尾部索引
     eq: function (i) {
       var len = this.length,
         j = +i + (i < 0 ? len : 0);
       return this.pushStack(j >= 0 && j < len ? [this[j]] : []);
     },
 
+    // 返回当前 jQuery 对象的 prevObject 对象
     end: function () {
       return this.prevObject || this.constructor();
     },
@@ -326,6 +343,7 @@
 
     noop: function () {},
 
+    // 是否为一个对象
     isPlainObject: function (obj) {
       var proto, Ctor;
 
@@ -335,6 +353,7 @@
         return false;
       }
 
+      // Object.getPrototypeOf() 方法返回指定对象的原型（内部[[Prototype]]属性的值）。
       proto = getProto(obj);
 
       // Objects with no prototype (e.g., `Object.create( null )`) are plain
@@ -347,9 +366,11 @@
       return typeof Ctor === "function" && fnToString.call(Ctor) === ObjectFunctionString;
     },
 
+    // 是否为空对象
     isEmptyObject: function (obj) {
       var name;
 
+      // 如果对象有键则说明 obj 不是一个空对象
       for (name in obj) {
         return false;
       }
@@ -363,6 +384,7 @@
       });
     },
 
+    // 遍历数组或者对象的键值对， 返回当前 obj
     each: function (obj, callback) {
       var length, i = 0;
 
@@ -384,6 +406,7 @@
       return obj;
     },
 
+    // 去掉字符串两头的空格
     // Support: Android <=4.0 only
     trim: function (text) {
       return text == null ?
@@ -391,6 +414,7 @@
         (text + "").replace(rtrim, "");
     },
 
+    // 合并数组
     // results is for internal usage only
     makeArray: function (arr, results) {
       var ret = results || [];
@@ -408,10 +432,12 @@
       return ret;
     },
 
+    // 返回元素在数组中第一次出现的索引，不存在返回 -1
     inArray: function (elem, arr, i) {
       return arr == null ? -1 : indexOf.call(arr, elem, i);
     },
 
+    // 将第二个数组的元素合并到第一个数组，第二个数组在第一个数组的后面
     // Support: Android <=4.0 only, PhantomJS 1 only
     // push.apply(_, arraylike) throws on ancient WebKit
     merge: function (first, second) {
@@ -428,6 +454,7 @@
       return first;
     },
 
+    // 查询元素，返回匹配到的元素集合
     grep: function (elems, callback, invert) {
       var callbackInverse,
         matches = [],
@@ -447,6 +474,7 @@
       return matches;
     },
 
+    // 遍历数组或者对象的键值对，返回 callback 的结果数组
     // arg is for internal usage only
     map: function (elems, callback, arg) {
       var length, value,
@@ -475,6 +503,7 @@
         }
       }
 
+      // Array.prototype.concat() 合并两个或多个数组。此方法不会更改现有数组，而是返回一个新数组。
       // Flatten any nested arrays
       return concat.apply([], ret);
     },
@@ -487,16 +516,20 @@
     support: support
   });
 
+  // 一个具有数据类型 “symbol” 的值可以被称为 “符号类型值”
   if (typeof Symbol === "function") {
     jQuery.fn[Symbol.iterator] = arr[Symbol.iterator];
   }
 
+  // 将数据类型小写形式放到 class2type 对象中
   // Populate the class2type map
   jQuery.each("Boolean Number String Function Array Date RegExp Object Error Symbol".split(" "),
     function (i, name) {
       class2type["[object " + name + "]"] = name.toLowerCase();
     });
 
+  
+  // 判断是否为一个可遍历的对象
   function isArrayLike(obj) {
 
     // Support: real iOS 8.2 only (not reproducible in simulator)
@@ -513,6 +546,8 @@
     return type === "array" || length === 0 ||
       typeof length === "number" && length > 0 && (length - 1) in obj;
   }
+
+  // css 选择器使用的 sizzlejs
   var Sizzle =
     /*!
      * Sizzle CSS Selector Engine v2.3.4
@@ -2805,7 +2840,7 @@
     })(window);
 
 
-
+  // Sizzle 函数会返回匹配的 dom 元素数组
   jQuery.find = Sizzle;
   jQuery.expr = Sizzle.selectors;
 
@@ -2819,7 +2854,7 @@
 
 
 
-
+  // Tag: 190724
   var dir = function (elem, dir, until) {
     var matched = [],
       truncate = until !== undefined;
