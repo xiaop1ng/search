@@ -2870,10 +2870,10 @@
     return matched;
   };
 
-
+  // 获取 n 的兄弟节点元素
   var siblings = function (n, elem) {
     var matched = [];
-
+    // Node.nextSibling 是一个只读属性，返回其父节点的 childNodes 列表中紧跟在其后面的节点，如果指定的节点为最后一个节点，则返回 null。
     for (; n; n = n.nextSibling) {
       if (n.nodeType === 1 && n !== elem) {
         matched.push(n);
@@ -2883,11 +2883,11 @@
     return matched;
   };
 
-
+  // /^[\x20\t\r\n\f]*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\([\x20\t\r\n\f]*((?:-\d)?\d*)[\x20\t\r\n\f]*\)|)(?=[^-]|$)/i
   var rneedsContext = jQuery.expr.match.needsContext;
 
 
-
+  // 判断元素节点名称
   function nodeName(elem, name) {
 
     return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
@@ -2896,7 +2896,7 @@
   var rsingleTag = (/^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i);
 
 
-
+  // 在元素集合中筛选元素
   // Implement the identical functionality for filter and not
   function winnow(elements, qualifier, not) {
     if (isFunction(qualifier)) {
@@ -2923,6 +2923,7 @@
     return jQuery.filter(qualifier, elements, not);
   }
 
+  // Tag: 190724
   jQuery.filter = function (expr, elems, not) {
     var elem = elems[0];
 
