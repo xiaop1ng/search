@@ -2923,7 +2923,7 @@
     return jQuery.filter(qualifier, elements, not);
   }
 
-  // Tag: 190724
+  // 过滤元素集合
   jQuery.filter = function (expr, elems, not) {
     var elem = elems[0];
 
@@ -2997,9 +2997,11 @@
     // Shortcut simple #id case for speed
     rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/,
 
+    // 初始化方法
     init = jQuery.fn.init = function (selector, context, root) {
       var match, elem;
 
+      // select 为假时
       // HANDLE: $(""), $(null), $(undefined), $(false)
       if (!selector) {
         return this;
@@ -3009,6 +3011,7 @@
       // so migrate can support jQuery.sub (gh-2101)
       root = root || rootjQuery;
 
+      // selector 是一个 html 标签时
       // Handle HTML strings
       if (typeof selector === "string") {
         if (selector[0] === "<" &&
@@ -3019,9 +3022,12 @@
           match = [null, selector, null];
 
         } else {
+          // 匹配选择器
+          // RegExp.prototype.exec() 方法在一个指定字符串中执行一个搜索匹配。返回一个结果数组或 null。
           match = rquickExpr.exec(selector);
         }
 
+        // 匹配到了元素
         // Match html or make sure no context is specified for #id
         if (match && (match[1] || !context)) {
 
@@ -3054,6 +3060,7 @@
 
             return this;
 
+            // 匹配到 id 
             // HANDLE: $(#id)
           } else {
             elem = document.getElementById(match[2]);
@@ -3077,6 +3084,7 @@
           return this.constructor(context).find(selector);
         }
 
+        // 匹配到 dom 元素对象
         // HANDLE: $(DOMElement)
       } else if (selector.nodeType) {
         this[0] = selector;
@@ -3093,9 +3101,11 @@
           selector(jQuery);
       }
 
+      // 返回元素集合数组
       return jQuery.makeArray(selector, this);
     };
 
+  // 将 jQuery 对象的原型对象赋值给 init 函数的原型对象
   // Give the init function the jQuery prototype for later instantiation
   init.prototype = jQuery.fn;
 
@@ -3128,6 +3138,7 @@
       });
     },
 
+    // 方法获得匹配选择器的第一个祖先元素，从当前元素开始沿 DOM 树向上。
     closest: function (selectors, context) {
       var cur,
         i = 0,
@@ -3158,6 +3169,7 @@
       return this.pushStack(matched.length > 1 ? jQuery.uniqueSort(matched) : matched);
     },
 
+    // elem 元素集合，返回 this 在元素集合中的索引
     // Determine the position of an element within the set
     index: function (elem) {
 
@@ -3179,6 +3191,7 @@
       );
     },
 
+    // 添加元素到当前 jQuery 对象中
     add: function (selector, context) {
       return this.pushStack(
         jQuery.uniqueSort(
@@ -3199,41 +3212,54 @@
     return cur;
   }
 
+  // 元素选择器们
   jQuery.each({
+    // 上一级元素
     parent: function (elem) {
       var parent = elem.parentNode;
       return parent && parent.nodeType !== 11 ? parent : null;
     },
+    // 所有上级元素集合
     parents: function (elem) {
       return dir(elem, "parentNode");
     },
+    // 所有上级元素集合，到 until 为止（不包含 until）
     parentsUntil: function (elem, i, until) {
       return dir(elem, "parentNode", until);
     },
+    // 同级下一个元素
     next: function (elem) {
       return sibling(elem, "nextSibling");
     },
+    // 同级上一个元素
     prev: function (elem) {
       return sibling(elem, "previousSibling");
     },
+    // 同级后面的元素集合
     nextAll: function (elem) {
       return dir(elem, "nextSibling");
     },
+    // 同级前面的元素集合
     prevAll: function (elem) {
       return dir(elem, "previousSibling");
     },
+    // 同级后面的元素集合，到 until 为止
     nextUntil: function (elem, i, until) {
       return dir(elem, "nextSibling", until);
     },
+    // 同级前面的元素集合，到 until 为止
     prevUntil: function (elem, i, until) {
       return dir(elem, "previousSibling", until);
     },
+    // 所有同级元素集合，包含自己
     siblings: function (elem) {
       return siblings((elem.parentNode || {}).firstChild, elem);
     },
+    // 所有子元素集合
     children: function (elem) {
       return siblings(elem.firstChild);
     },
+    // 所有子内容集合（包含元素和内容，比如文字）
     contents: function (elem) {
       if (typeof elem.contentDocument !== "undefined") {
         return elem.contentDocument;
@@ -4336,6 +4362,7 @@
   });
 
   jQuery.fn.extend({
+    // 获取元素上的 data-[key] 的值，不传 key 返回元素包含 data-[key] 的所有属性的对象
     data: function (key, value) {
       var i, name, data,
         elem = this[0],
@@ -4714,6 +4741,7 @@
     return display;
   }
 
+  // 显示或隐藏，boolean: show
   function showHide(elements, show) {
     var display, elem,
       values = [],
@@ -4763,12 +4791,15 @@
   }
 
   jQuery.fn.extend({
+    // 显示
     show: function () {
       return showHide(this, true);
     },
+    // 隐藏
     hide: function () {
       return showHide(this);
     },
+    // 显示隐藏的元素，隐藏显示的元素
     toggle: function (state) {
       if (typeof state === "boolean") {
         return state ? this.show() : this.hide();
@@ -5004,6 +5035,7 @@
     } catch (err) {}
   }
 
+  // 绑定事件到元素上
   function on(elem, types, selector, data, fn, one) {
     var origFn, type;
 
@@ -5737,7 +5769,9 @@
   }, jQuery.event.addProp);
 
   jQuery.each({
+    // 获取焦点
     focus: "focusin",
+    // 失去焦点
     blur: "focusout"
   }, function (type, delegateType) {
     jQuery.event.special[type] = {
@@ -5753,6 +5787,7 @@
         // Return false to allow normal processing in the caller
         return false;
       },
+      // 触发事件
       trigger: function () {
 
         // Force setup before trigger
@@ -5775,7 +5810,9 @@
   // https://bugs.chromium.org/p/chromium/issues/detail?id=470258
   // for the description of the bug (it existed in older Chrome versions as well).
   jQuery.each({
+    // 鼠标移入
     mouseenter: "mouseover",
+    // 鼠标移出
     mouseleave: "mouseout",
     pointerenter: "pointerover",
     pointerleave: "pointerout"
@@ -5803,13 +5840,15 @@
   });
 
   jQuery.fn.extend({
-
+    // 绑定事件
     on: function (types, selector, data, fn) {
       return on(this, types, selector, data, fn);
     },
+    // 一次性绑定事件
     one: function (types, selector, data, fn) {
       return on(this, types, selector, data, fn, 1);
     },
+    // 移去绑定事件
     off: function (types, selector, fn) {
       var handleObj, type;
       if (types && types.preventDefault && types.handleObj) {
@@ -10148,6 +10187,7 @@
   })();
 
 
+  // 
   // Argument "data" should be string of html
   // context (optional): If specified, the fragment will be created in this context,
   // defaults to document
@@ -10170,6 +10210,7 @@
       if (support.createHTMLDocument) {
         context = document.implementation.createHTMLDocument("");
 
+        // document.implementation.createDocument(namespaceURI, qualifiedNameStr, documentType);
         // Set the base href for the created document
         // so any parsed elements with URLs
         // are based on the document's URL (gh-2965)
