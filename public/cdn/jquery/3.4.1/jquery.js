@@ -6099,7 +6099,7 @@
     htmlPrefilter: function (html) {
       return html.replace(rxhtmlTag, "<$1></$2>");
     },
-
+    // 生成被选元素的副本，包含子节点、文本和属性。
     clone: function (elem, dataAndEvents, deepDataAndEvents) {
       var i, l, srcElements, destElements,
         clone = elem.cloneNode(true),
@@ -6179,14 +6179,15 @@
   });
 
   jQuery.fn.extend({
+    // 分离元素
     detach: function (selector) {
       return remove(this, selector, true);
     },
-
+    // 移除元素
     remove: function (selector) {
       return remove(this, selector);
     },
-
+    // 修改元素内的文字
     text: function (value) {
       return access(this, function (value) {
         return value === undefined ?
@@ -6198,7 +6199,7 @@
           });
       }, null, value, arguments.length);
     },
-
+    // 子元素集合尾部追加元素
     append: function () {
       return domManip(this, arguments, function (elem) {
         if (this.nodeType === 1 || this.nodeType === 11 || this.nodeType === 9) {
@@ -6207,7 +6208,7 @@
         }
       });
     },
-
+    // 子元素头部追加元素
     prepend: function () {
       return domManip(this, arguments, function (elem) {
         if (this.nodeType === 1 || this.nodeType === 11 || this.nodeType === 9) {
@@ -6216,7 +6217,7 @@
         }
       });
     },
-
+    // 当前元素头部追加元素
     before: function () {
       return domManip(this, arguments, function (elem) {
         if (this.parentNode) {
@@ -6224,7 +6225,7 @@
         }
       });
     },
-
+    // 当前元素尾部追加元素
     after: function () {
       return domManip(this, arguments, function (elem) {
         if (this.parentNode) {
@@ -6232,7 +6233,7 @@
         }
       });
     },
-
+    // 清空元素
     empty: function () {
       var elem,
         i = 0;
@@ -6251,7 +6252,7 @@
 
       return this;
     },
-
+    // 复制元素
     clone: function (dataAndEvents, deepDataAndEvents) {
       dataAndEvents = dataAndEvents == null ? false : dataAndEvents;
       deepDataAndEvents = deepDataAndEvents == null ? dataAndEvents : deepDataAndEvents;
@@ -6260,7 +6261,7 @@
         return jQuery.clone(this, dataAndEvents, deepDataAndEvents);
       });
     },
-
+    // 将 value 替换到子元素的位置
     html: function (value) {
       return access(this, function (value) {
         var elem = this[0] || {},
@@ -6299,7 +6300,7 @@
         }
       }, null, value, arguments.length);
     },
-
+    // 替换为另一个元素
     replaceWith: function () {
       var ignored = [];
 
@@ -6851,6 +6852,7 @@
       }
     },
 
+    // 调整样式
     css: function (elem, name, extra, styles) {
       var val, num, hooks,
         origName = camelCase(name),
@@ -7878,10 +7880,12 @@
     attrHandle = jQuery.expr.attrHandle;
 
   jQuery.fn.extend({
+    // 获取元素属性值或者给元素属性赋值
     attr: function (name, value) {
       return access(this, jQuery.attr, name, value, arguments.length > 1);
     },
 
+    // 移除元素属性
     removeAttr: function (name) {
       return this.each(function () {
         jQuery.removeAttr(this, name);
@@ -8022,6 +8026,7 @@
   });
 
   jQuery.extend({
+    // prop() 方法应该用于检索属性值，例如 DOM 属性（如 selectedIndex, tagName, nodeName, nodeType, ownerDocument, defaultChecked, 和 defaultSelected）。
     prop: function (elem, name, value) {
       var ret, hooks,
         nType = elem.nodeType;
