@@ -8170,6 +8170,7 @@
   }
 
   jQuery.fn.extend({
+    // 元素添加 class
     addClass: function (value) {
       var classes, elem, cur, curValue, clazz, j, finalValue,
         i = 0;
@@ -8207,6 +8208,7 @@
       return this;
     },
 
+    // 移除元素某个 class
     removeClass: function (value) {
       var classes, elem, cur, curValue, clazz, j, finalValue,
         i = 0;
@@ -8252,6 +8254,7 @@
       return this;
     },
 
+    // 为元素添加或移除某个 class
     toggleClass: function (value, stateVal) {
       var type = typeof value,
         isValidValue = type === "string" || Array.isArray(value);
@@ -8313,6 +8316,7 @@
       });
     },
 
+    // 是否存在某个 class
     hasClass: function (selector) {
       var className, elem,
         i = 0;
