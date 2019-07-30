@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cascading Style Sheets</title>
+    <style>
+        .content div {
+            height: 250px;
+            padding: 60px;
+            margin: 5px;
+            border: black solid 1px;
+        }
+        .box1 {
+            background-color: yellow;
+        }
+        .box2 {
+            background-image: url('../image/yellowduck.png');
+        }
+        /* 水平方向平铺 */
+        .box3 {
+            background-image: url('../image/yellowduck.png');
+            background-repeat:repeat-x;
+        }
+        /* 不平铺 */
+        .box4 {
+            background-image: url('../image/yellowduck.png');
+            background-repeat: no-repeat;
+        }
+        /* 背景的绝对定位 */
+        .box5 {
+            background-image: url('../image/yellowduck.png');
+            background-repeat: no-repeat;
+            background-position:right top;
+        }
+        /* 背景随着页面滚动 */
+        .box6 {
+            background-image: url('../image/yellowduck.png');
+            background-repeat: no-repeat;  
+            background-attachment: fixed;
+        }
+
+        .box7 {
+            background: url('../image/yellowduck.png') no-repeat;
+            opacity: 0.5;
+        }
+        .box7:hover {
+            background: url('../image/yellowduck.png') no-repeat;
+            opacity: 1;    
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="box1">第 1 个盒子</div>
+        <div class="box2">第 2 个盒子</div>
+        <div class="box3">第 3 个盒子</div>
+        <div class="box4">第 4 个盒子</div>
+        <div class="box5">第 5 个盒子</div>
+        <div class="box6">第 6 个盒子</div>
+        <div class="box7">第 7 个盒子</div>
+    </div>
+    <div class="loader"></div>
+</body>
+</html>
