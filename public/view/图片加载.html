@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>网页图片 lazy 加载</title>
+    <script src="../cdn/jquery/3.4.1/jquery.js"></script>
+    <style>
+        .box {
+            min-height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/1.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/2.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/3.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/4.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/5.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/6.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/7.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/8.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/9.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/1.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/2.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/3.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/4.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/5.jpg"></div>
+    <div class="box"><img src="/image/loading.gif" data-src="/image/6.jpg"></div>
+    <script>
+        start();
+        $(window).on('scroll', function() {
+            start();
+        });
+
+        function start() {
+            //.not('[data-isLoaded]')选中已加载的图片不需要重新加载
+            $('img').not('[data-isLoaded]').each(function () {
+                var $node = $(this);
+                if (isShow($node)) {
+                    loadImg($node);
+                }
+            })
+        }
+
+        //判断一个元素是不是出现在窗口(视野)
+        function isShow($node) {
+            return $node.offset().top <= $(window).height() + $(window).scrollTop();
+        }
+        //加载图片
+        function loadImg($img) {
+            var imgUrl = $img.attr('data-src');
+            $img.attr('src', imgUrl); //把data-src的值 赋值给src
+            $img.attr('data-isLoaded', 1); //已加载的图片做标记
+        }
+    </script>
+</body>
+
+</html>
